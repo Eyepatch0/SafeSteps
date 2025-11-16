@@ -153,7 +153,7 @@ export default function MapView({
             </div>
           </div>
 
-          <div className="absolute inset-y-6 right-6 flex w-64 flex-col gap-3">
+          <div className="absolute inset-y-6 right-6 flex w-64 flex-col gap-3 pointer-events-none">
             {routes.map((route) => {
               const active = route.id === activeRouteId
 
@@ -163,6 +163,7 @@ export default function MapView({
                   type="button"
                   aria-pressed={active}
                   className={clsx(
+                    'pointer-events-auto',
                     'transform rounded-2xl border px-4 py-3 text-left transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900',
                     active
                       ? 'border-ember/70 bg-ember/15 text-white shadow-glow scale-[1.02]'
