@@ -1,60 +1,8 @@
 import { useMemo, useState } from 'react'
+import createMockRoutesSource from './useRouteData.mock.js'
+import { planSafeRoutes } from '../services/api'
 
-const BASE_ROUTES = [
-  {
-    label: 'Lantern Walk',
-    duration: 18,
-    distance: 1.4,
-    safetyScore: 92,
-    riskLevel: 'low',
-    description: 'Prioritizes main streets with campus lighting and late-night cafes.',
-    riskFactors: ['Well-lit blocks', 'Student foot traffic'],
-    path: [
-      { lat: 38.9897, lng: -76.9378 },
-      { lat: 38.9899, lng: -76.9364 },
-      { lat: 38.9908, lng: -76.935 },
-      { lat: 38.9921, lng: -76.9358 },
-      { lat: 38.9931, lng: -76.9372 },
-    ],
-  },
-  {
-    label: 'Aurora Loop',
-    duration: 21,
-    distance: 1.6,
-    safetyScore: 87,
-    riskLevel: 'medium',
-    description: 'Balances lighting with quieter blocks, avoiding recent incident zones.',
-    riskFactors: ['Residential watch', 'Community patrol'],
-    path: [
-      { lat: 38.9889, lng: -76.9399 },
-      { lat: 38.9896, lng: -76.9381 },
-      { lat: 38.9904, lng: -76.9372 },
-      { lat: 38.9915, lng: -76.9378 },
-      { lat: 38.9924, lng: -76.9393 },
-    ],
-  },
-  {
-    label: 'Beacon Path',
-    duration: 23,
-    distance: 1.8,
-    safetyScore: 81,
-    riskLevel: 'high',
-    description: 'Adds an extra block near open businesses for more visibility.',
-    riskFactors: ['Shopfront lighting', 'Emergency call boxes'],
-    path: [
-      { lat: 38.9882, lng: -76.9387 },
-      { lat: 38.9889, lng: -76.9368 },
-      { lat: 38.9896, lng: -76.9346 },
-      { lat: 38.9907, lng: -76.9338 },
-      { lat: 38.9918, lng: -76.9354 },
-    ],
-  },
-]
-
-const DEFAULT_QUERY = {
-  start: 'North Campus Commons',
-  destination: 'Aurora Station',
-}
+const { BASE_ROUTES, DEFAULT_QUERY } = createMockRoutesSource
 
 function createMockRoutes({ start, destination }) {
   return BASE_ROUTES.map((route, index) => ({
@@ -70,30 +18,69 @@ export default function useRouteData() {
   const [query, setQuery] = useState(DEFAULT_QUERY)
   const [routes, setRoutes] = useState(() => createMockRoutes(DEFAULT_QUERY))
   const [activeRouteId, setActiveRouteId] = useState(routes[0]?.id ?? null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const activeRoute = useMemo(
     () => routes.find((route) => route.id === activeRouteId) ?? null,
     [routes, activeRouteId],
   )
 
-  const planRoutes = ({ start = '', destination = '' }) => {
+  async function planRoutes({ start = '', destination = '' }) {
     const trimmedQuery = {
       start: start.trim() || DEFAULT_QUERY.start,
       destination: destination.trim() || DEFAULT_QUERY.destination,
     }
 
-    const generated = createMockRoutes(trimmedQuery).map((route, index) => ({
-      ...route,
-      // add subtle differentiation so they feel unique per plan
-      duration: route.duration + index,
-      safetyScore: Math.max(70, route.safetyScore - index * 2),
-    }))
+    setLoading(true)
+    setError(null)
 
-    setQuery(trimmedQuery)
-    setRoutes(generated)
-    setActiveRouteId(generated[0]?.id ?? null)
+    // Clear currently-displayed routes immediately so old polylines vanish
+    // while the new plan request is in-flight.
+    setRoutes([])
+    setActiveRouteId(null)
 
-    return { routes: generated, query: trimmedQuery }
+    try {
+      const resp = await planSafeRoutes({ origin: trimmedQuery.start, destination: trimmedQuery.destination, mode: 'WALK' })
+
+      // map backend SafeRouteResponse -> frontend route shape
+      const mapped = resp.map((r, i) => ({
+        id: `route-${i + 1}`,
+        label: r.label,
+        duration: r.duration,
+        distance: r.distance,
+        safetyScore: r.safetyScore,
+        riskLevel: r.riskLevel,
+        description: r.description,
+        riskFactors: r.riskFactors,
+        path: r.path,
+      }))
+
+      setQuery(trimmedQuery)
+      setRoutes(mapped)
+      setActiveRouteId(mapped[0]?.id ?? null)
+
+      return { routes: mapped, query: trimmedQuery }
+    } catch (err) {
+      // fallback to mock data on error
+      const generated = createMockRoutes(trimmedQuery).map((route, index) => ({
+        ...route,
+        duration: route.duration + index,
+        safetyScore: Math.max(70, route.safetyScore - index * 2),
+      }))
+      setQuery(trimmedQuery)
+      setRoutes(generated)
+      setActiveRouteId(generated[0]?.id ?? null)
+      setError(err?.message ?? String(err))
+      return { routes: generated, query: trimmedQuery, error: err }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function clearRoutes() {
+    setRoutes([])
+    setActiveRouteId(null)
   }
 
   return {
@@ -103,7 +90,11 @@ export default function useRouteData() {
     activeRoute,
     planRoutes,
     lastQuery: query,
+    loading,
+    error,
+    clearRoutes,
   }
 }
+
 
 

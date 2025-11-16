@@ -23,6 +23,9 @@ function App() {
     activeRoute,
     planRoutes,
     lastQuery,
+    loading,
+    error,
+    clearRoutes,
   } = useRouteData()
   const [accessibilitySettings, setAccessibilitySettings] = useState(
     DEFAULT_ACCESSIBILITY,
@@ -45,11 +48,17 @@ function App() {
   }, [activeRoute])
 
   const handlePlanRoute = (formData) => {
-    const { query } = planRoutes(formData)
-
-    setRouteSummary(
-      `Exploring safer options from ${query.start} to ${query.destination}. We prioritize lighting, activity, and recent community safety signals.`,
-    )
+    ; (async () => {
+      setRouteSummary(`Exploring safer options...`)
+      try {
+        const { query } = await planRoutes(formData)
+        setRouteSummary(
+          `Exploring safer options from ${query.start} to ${query.destination}. We prioritize lighting, activity, and recent community safety signals.`,
+        )
+      } catch (err) {
+        setRouteSummary('Unable to fetch live routes — showing demo data.')
+      }
+    })()
   }
 
   const renderView = () => {
@@ -68,10 +77,13 @@ function App() {
         routes={routes}
         activeRouteId={activeRouteId}
         onRouteFocus={setActiveRouteId}
+        onClearRoutes={clearRoutes}
         routeSummary={routeSummary}
         routeStats={stats}
         accessibilitySettings={accessibilitySettings}
         lastQuery={lastQuery}
+        isSubmitting={loading}
+        apiError={error}
       />
     )
   }

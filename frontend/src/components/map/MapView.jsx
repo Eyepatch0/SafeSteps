@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import clsx from 'clsx'
-import { GoogleMap, Polyline, useJsApiLoader } from '@react-google-maps/api'
+import { GoogleMap, Polyline, useJsApiLoader, Marker } from '@react-google-maps/api'
 import Badge from '../common/Badge.jsx'
 import SafetyLegend from './SafetyLegend.jsx'
 import nightMapStyle from '../../styles/mapStyles.js'
@@ -104,6 +104,20 @@ export default function MapView({
                       />
                     )
                   })}
+
+                  {/* Start/End markers for the focused route */}
+                  {highlightedRoute?.path?.length > 0 ? (
+                    <>
+                      <Marker
+                        position={highlightedRoute.path[0]}
+                        label={{ text: 'S', color: '#ffffff', fontSize: '12px', fontWeight: 'bold' }}
+                      />
+                      <Marker
+                        position={highlightedRoute.path[highlightedRoute.path.length - 1]}
+                        label={{ text: 'D', color: '#ffffff', fontSize: '12px', fontWeight: 'bold' }}
+                      />
+                    </>
+                  ) : null}
                 </GoogleMap>
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-[24px] bg-night-900/70 text-center text-slate-400">
