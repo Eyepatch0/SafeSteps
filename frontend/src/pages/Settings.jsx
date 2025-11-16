@@ -1,6 +1,7 @@
 import Badge from '../components/common/Badge.jsx'
 import Card from '../components/common/Card.jsx'
 import AccessibilityToggle from '../components/controls/AccessibilityToggle.jsx'
+import PanicButton from '../components/common/PanicButton.jsx'
 
 export default function Settings({
   accessibilitySettings,
@@ -34,7 +35,6 @@ export default function Settings({
               settings will soon propagate across the entire routing experience.
             </p>
           </div>
-
           <div className="mt-6">
             <AccessibilityToggle
               value={accessibilitySettings}
@@ -46,19 +46,20 @@ export default function Settings({
         <Card className="bg-night-900/70">
           <div className="space-y-3">
             <p className="text-sm uppercase tracking-[0.35em] text-slate-400">
-              Coming soon
+              Safety settings
             </p>
-            <p className="text-xl text-white">Alert & escort preferences</p>
-            <p className="text-sm text-slate-400">
-              Subscribe to campus alerts, community escorts, or lantern checkpoints.
-              We&apos;ll plug these features into backend services in the next
-              milestone.
-            </p>
-            <ul className="list-disc space-y-1 pl-5 text-sm text-slate-300">
-              <li>Choose quiet hours and notification channels.</li>
-              <li>Enable auto-sharing of your route ETA with guardians.</li>
-              <li>Preview escort availability near your destination.</li>
-            </ul>
+            <p className="text-xl text-white">Immediate help</p>
+            <div className="mt-6">
+              <p className="text-sm text-slate-300 mb-3">
+                If you need immediate assistance, use the panic button below to
+                initiate a call to campus police.
+              </p>
+              <div className="flex justify-center">
+                <div className="w-48">
+                  <PanicButton phoneNumber={"(410) 706-3333"} />
+                </div>
+              </div>
+            </div>
           </div>
         </Card>
       </div>

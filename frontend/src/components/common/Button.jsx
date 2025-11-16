@@ -5,6 +5,8 @@ const VARIANTS = {
     'bg-gradient-to-r from-twilight to-rose-500 focus-visible:ring-twilight/70 text-white shadow-glow',
   secondary:
     'bg-transparent border border-white/30 text-white focus-visible:ring-white/50 hover:border-ember/60 hover:text-ember',
+  danger:
+    'bg-red-600 hover:bg-red-700 focus-visible:ring-red-500 text-white shadow-sm',
 }
 
 export default function Button({
