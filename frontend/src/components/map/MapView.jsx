@@ -5,10 +5,18 @@ import nightMapStyle from '../../styles/mapStyles.js'
 import policeStations from '../../data/policeStations'
 
 const MAP_CENTER = { lat: 38.9897, lng: -76.9378 }
-const ROUTE_COLORS = {
-  low: '#4ade80',
-  medium: '#facc15',
-  high: '#ef4444',
+const SAFETY_COLORS = {
+  safe: '#4ade80', // >75
+  caution: '#facc15', // >20 && <=75
+  risk: '#ef4444', // <=20
+}
+
+function getSafetyColor(score = 0) {
+  const numericScore =
+    typeof score === 'string' ? parseFloat(score.replace(/[^\d.]/g, '')) : score
+  if (numericScore <= 20) return SAFETY_COLORS.risk
+  if (numericScore <= 75) return SAFETY_COLORS.caution
+  return SAFETY_COLORS.safe
 }
 
 export default function MapView({
@@ -103,8 +111,7 @@ export default function MapView({
                   {routes.map((route) => {
                     if (!route.path?.length) return null
                     const isActive = route.id === activeRouteId
-                    const strokeColor =
-                      ROUTE_COLORS[route.riskLevel] ?? ROUTE_COLORS.medium
+                    const strokeColor = getSafetyColor(route.safetyScore)
                     const pathSignature = [
                       route.path?.[0]?.lat ?? 0,
                       route.path?.[0]?.lng ?? 0,
