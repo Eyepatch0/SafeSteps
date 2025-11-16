@@ -16,8 +16,8 @@ function createMockRoutes({ start, destination }) {
 
 export default function useRouteData() {
   const [query, setQuery] = useState(DEFAULT_QUERY)
-  const [routes, setRoutes] = useState(() => createMockRoutes(DEFAULT_QUERY))
-  const [activeRouteId, setActiveRouteId] = useState(routes[0]?.id ?? null)
+  const [routes, setRoutes] = useState([])
+  const [activeRouteId, setActiveRouteId] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 

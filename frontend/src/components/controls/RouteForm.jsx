@@ -44,7 +44,7 @@ export default function RouteForm({ onSubmit, initialValues = EMPTY_VALUES, isSu
             name="start"
             value={formValues.start}
             onChange={handleChange}
-            placeholder="e.g., Library west entrance"
+            placeholder="e.g., McKeldin Library"
             className="w-full rounded-2xl border border-white/10 bg-night-900/60 px-4 py-3 text-base text-slate-100 placeholder:text-slate-500 focus:border-ember focus:outline-none focus:ring-2 focus:ring-ember/30"
             required
           />
@@ -59,7 +59,7 @@ export default function RouteForm({ onSubmit, initialValues = EMPTY_VALUES, isSu
             name="destination"
             value={formValues.destination}
             onChange={handleChange}
-            placeholder="e.g., Night market shuttle"
+            placeholder="e.g., University View"
             className="w-full rounded-2xl border border-white/10 bg-night-900/60 px-4 py-3 text-base text-slate-100 placeholder:text-slate-500 focus:border-ember focus:outline-none focus:ring-2 focus:ring-ember/30"
             required
           />
