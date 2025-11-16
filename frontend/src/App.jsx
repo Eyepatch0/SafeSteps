@@ -48,6 +48,7 @@ function App() {
   }, [activeRoute])
 
   const handlePlanRoute = (formData) => {
+    clearRoutes()
     ; (async () => {
       setRouteSummary(`Exploring safer options...`)
       try {

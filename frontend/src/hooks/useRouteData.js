@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import createMockRoutesSource from './useRouteData.mock.js'
 import { planSafeRoutes } from '../services/api'
 
@@ -20,6 +20,7 @@ export default function useRouteData() {
   const [activeRouteId, setActiveRouteId] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const requestIdRef = useRef(0)
 
   const activeRoute = useMemo(
     () => routes.find((route) => route.id === activeRouteId) ?? null,
@@ -31,6 +32,8 @@ export default function useRouteData() {
       start: start.trim() || DEFAULT_QUERY.start,
       destination: destination.trim() || DEFAULT_QUERY.destination,
     }
+    const requestId = requestIdRef.current + 1
+    requestIdRef.current = requestId
 
     setLoading(true)
     setError(null)
@@ -42,6 +45,9 @@ export default function useRouteData() {
 
     try {
       const resp = await planSafeRoutes({ origin: trimmedQuery.start, destination: trimmedQuery.destination, mode: 'WALK' })
+      if (requestId !== requestIdRef.current) {
+        return { routes: [], query: trimmedQuery, stale: true }
+      }
 
       // map backend SafeRouteResponse -> frontend route shape
       const mapped = resp.map((r, i) => ({
@@ -62,6 +68,9 @@ export default function useRouteData() {
 
       return { routes: mapped, query: trimmedQuery }
     } catch (err) {
+      if (requestId !== requestIdRef.current) {
+        return { routes: [], query: trimmedQuery, stale: true, error: err }
+      }
       // fallback to mock data on error
       const generated = createMockRoutes(trimmedQuery).map((route, index) => ({
         ...route,
@@ -74,7 +83,9 @@ export default function useRouteData() {
       setError(err?.message ?? String(err))
       return { routes: generated, query: trimmedQuery, error: err }
     } finally {
-      setLoading(false)
+      if (requestId === requestIdRef.current) {
+        setLoading(false)
+      }
     }
   }
 

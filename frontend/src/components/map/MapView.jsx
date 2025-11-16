@@ -41,6 +41,25 @@ export default function MapView({
     [],
   )
 
+  const routesSignature = useMemo(
+    () =>
+      routes
+        .map((route) => {
+          const start = route.path?.[0] ?? {}
+          const end = route.path?.[route.path.length - 1] ?? {}
+          return [
+            route.id,
+            route.path?.length ?? 0,
+            start.lat ?? 0,
+            start.lng ?? 0,
+            end.lat ?? 0,
+            end.lng ?? 0,
+          ].join(':')
+        })
+        .join('|'),
+    [routes],
+  )
+
   const mapCenter = routes[0]?.path?.[0] ?? MAP_CENTER
   const canRenderMap = Boolean(apiKey) && isLoaded && !loadError
 
@@ -75,6 +94,7 @@ export default function MapView({
             <div className="relative h-full w-full overflow-hidden rounded-[24px]">
               {canRenderMap ? (
                 <GoogleMap
+                  key={routesSignature}
                   options={mapOptions}
                   center={mapCenter}
                   zoom={14.8}
@@ -85,10 +105,17 @@ export default function MapView({
                     const isActive = route.id === activeRouteId
                     const strokeColor =
                       ROUTE_COLORS[route.riskLevel] ?? ROUTE_COLORS.medium
+                    const pathSignature = [
+                      route.path?.[0]?.lat ?? 0,
+                      route.path?.[0]?.lng ?? 0,
+                      route.path?.[route.path.length - 1]?.lat ?? 0,
+                      route.path?.[route.path.length - 1]?.lng ?? 0,
+                      route.path?.length ?? 0,
+                    ].join('-')
 
                     return (
                       <Polyline
-                        key={route.id}
+                        key={`${route.id}-${pathSignature}`}
                         path={route.path}
                         options={{
                           strokeColor,
