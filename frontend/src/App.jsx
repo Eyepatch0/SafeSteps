@@ -31,7 +31,7 @@ function App() {
     DEFAULT_ACCESSIBILITY,
   )
   const [routeSummary, setRouteSummary] = useState(
-    'Select your start and destination to preview illuminated routes.',
+    'Select the Start and End Location',
   )
   const [currentView, setCurrentView] = useState(VIEWS.home)
 

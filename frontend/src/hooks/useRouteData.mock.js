@@ -1,6 +1,6 @@
 export const DEFAULT_QUERY = {
-    start: 'North Campus Commons',
-    destination: 'Aurora Station',
+    start: '',
+    destination: '',
 }
 
 export const BASE_ROUTES = [
