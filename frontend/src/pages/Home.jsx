@@ -20,13 +20,6 @@ export default function Home({
 
   return (
     <section className="space-y-8">
-      <div className="flex items-center gap-3 text-sm text-slate-300">
-        <Badge tone="info" className="uppercase tracking-[0.35em]">
-          Demo
-        </Badge>
-        <p>Mock data only — backend integration coming next.</p>
-      </div>
-
       <div className="grid gap-8 lg:grid-cols-[1fr_2fr]">
         <div className="space-y-6">
           <header className="space-y-3">

@@ -1,8 +1,6 @@
 import { useMemo } from 'react'
 import clsx from 'clsx'
 import { GoogleMap, Polyline, useJsApiLoader, Marker } from '@react-google-maps/api'
-import Badge from '../common/Badge.jsx'
-import SafetyLegend from './SafetyLegend.jsx'
 import nightMapStyle from '../../styles/mapStyles.js'
 
 const MAP_CENTER = { lat: 38.9897, lng: -76.9378 }
@@ -66,11 +64,9 @@ export default function MapView({
                 accessibilitySettings?.largeText && 'text-3xl',
               )}
             >
-              Night safety layers
+              Night Safe routes
             </h2>
           </div>
-
-          <Badge tone="info">Live Google Maps beta</Badge>
         </div>
 
         <div className="relative flex-1 rounded-[28px] border border-white/10 bg-night-900/50 p-4 min-h-[420px]">
@@ -166,8 +162,6 @@ export default function MapView({
               )
             })}
           </div>
-
-          <SafetyLegend />
 
           {highlightedRoute ? (
             <div className="absolute bottom-6 right-6 rounded-2xl border border-white/10 bg-night-900/80 px-4 py-3 text-sm text-slate-200">

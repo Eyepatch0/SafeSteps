@@ -31,7 +31,7 @@ function App() {
     DEFAULT_ACCESSIBILITY,
   )
   const [routeSummary, setRouteSummary] = useState(
-    'Select the Start and End Location',
+    'Select your destination',
   )
   const [currentView, setCurrentView] = useState(VIEWS.home)
 
