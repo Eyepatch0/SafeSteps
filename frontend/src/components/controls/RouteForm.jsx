@@ -7,7 +7,7 @@ const EMPTY_VALUES = {
   destination: '',
 }
 
-export default function RouteForm({ onSubmit, initialValues = EMPTY_VALUES }) {
+export default function RouteForm({ onSubmit, initialValues = EMPTY_VALUES, isSubmitting = false, onInputChange = null }) {
   const [formValues, setFormValues] = useState(() => ({
     start: initialValues?.start ?? '',
     destination: initialValues?.destination ?? '',
@@ -16,6 +16,12 @@ export default function RouteForm({ onSubmit, initialValues = EMPTY_VALUES }) {
   const handleChange = (event) => {
     const { name, value } = event.target
     setFormValues((prev) => ({ ...prev, [name]: value }))
+    try {
+      // notify parent that user edited the form so we can clear any old routes
+      onInputChange?.()
+    } catch (err) {
+      // swallow errors from parent callback
+    }
   }
 
   const handleSubmit = (event) => {
@@ -60,7 +66,9 @@ export default function RouteForm({ onSubmit, initialValues = EMPTY_VALUES }) {
         </div>
 
         <div className="space-y-3 pt-1">
-          <Button type="submit">Illuminate Route</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Searching…' : 'Illuminate Route'}
+          </Button>
           <p className="text-xs text-slate-400">
             Use approximate locations for now – demo mode. Real-time data coming
             soon.

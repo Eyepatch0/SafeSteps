@@ -8,10 +8,13 @@ export default function Home({
   routes = [],
   activeRouteId = null,
   onRouteFocus,
+  onClearRoutes,
   routeSummary,
   routeStats,
   accessibilitySettings,
   lastQuery,
+  isSubmitting = false,
+  apiError = null,
 }) {
   const activeRoute = routes.find((route) => route.id === activeRouteId)
 
@@ -44,7 +47,15 @@ export default function Home({
             key={`${lastQuery?.start ?? ''}-${lastQuery?.destination ?? ''}`}
             onSubmit={onPlanRoute}
             initialValues={lastQuery}
+            isSubmitting={isSubmitting}
+            onInputChange={onClearRoutes}
           />
+
+          {apiError ? (
+            <div className="mt-4 rounded-md border border-rose-400 bg-rose-900/10 px-4 py-3 text-sm text-rose-200">
+              {String(apiError)}
+            </div>
+          ) : null}
 
           <Card className="bg-night-900/60">
             <div className="flex items-start justify-between">
