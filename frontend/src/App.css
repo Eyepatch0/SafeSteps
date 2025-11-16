@@ -1,3 +1,40 @@
 /* SafeSteps scoped styles
    Tailwind handles most styling; this file is kept to allow
    occasional bespoke rules if we need them later. */
+
+:root {
+  --app-font-scale: 1;
+  font-size: calc(16px * var(--app-font-scale));
+}
+
+[data-large-text='true'] {
+  line-height: 1.65;
+}
+
+[data-high-contrast='true'] {
+  color-scheme: dark;
+}
+
+[data-high-contrast='true'] body {
+  background-color: #02030c;
+}
+
+[data-high-contrast='true'] .surface-card {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  background-color: rgba(6, 6, 18, 0.96) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: none !important;
+}
+
+[data-high-contrast='true'] .btn-control {
+  border-width: 2px !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+[data-high-contrast='true'] .map-shell {
+  border-color: rgba(255, 255, 255, 0.55) !important;
+  background-color: #040512 !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+}

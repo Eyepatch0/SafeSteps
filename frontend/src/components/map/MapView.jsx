@@ -74,7 +74,7 @@ export default function MapView({
   return (
     <div
       className={clsx(
-        'relative h-full overflow-hidden rounded-[36px] border bg-night-900/70 shadow-card backdrop-blur-2xl',
+        'map-shell relative h-full overflow-hidden rounded-[36px] border bg-night-900/70 shadow-card backdrop-blur-2xl',
         accentBorder,
       )}
     >

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import AppLayout from './components/layout/AppLayout.jsx'
 import Home from './pages/Home.jsx'
 import Settings from './pages/Settings.jsx'
@@ -34,6 +34,19 @@ function App() {
     'Select your destination',
   )
   const [currentView, setCurrentView] = useState(VIEWS.home)
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    const root = document.documentElement
+    root.dataset.highContrast = accessibilitySettings.highContrast
+      ? 'true'
+      : 'false'
+    root.dataset.largeText = accessibilitySettings.largeText ? 'true' : 'false'
+    root.style.setProperty(
+      '--app-font-scale',
+      accessibilitySettings.largeText ? '1.1' : '1',
+    )
+  }, [accessibilitySettings])
 
   const stats = useMemo(() => {
     if (!activeRoute) {
@@ -95,6 +108,7 @@ function App() {
       currentView={currentView}
       onNavigateHome={() => setCurrentView(VIEWS.home)}
       onNavigateSettings={() => setCurrentView(VIEWS.settings)}
+      accessibilitySettings={accessibilitySettings}
     >
       {renderView()}
     </AppLayout>
