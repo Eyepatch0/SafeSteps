@@ -20,6 +20,7 @@ export default function RouteForm({ onSubmit, initialValues = EMPTY_VALUES, isSu
       // notify parent that user edited the form so we can clear any old routes
       onInputChange?.()
     } catch (err) {
+      console.error(err)
       // swallow errors from parent callback
     }
   }
@@ -69,10 +70,6 @@ export default function RouteForm({ onSubmit, initialValues = EMPTY_VALUES, isSu
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Searching…' : 'Illuminate Route'}
           </Button>
-          <p className="text-xs text-slate-400">
-            Use approximate locations for now – demo mode. Real-time data coming
-            soon.
-          </p>
         </div>
       </form>
     </Card>

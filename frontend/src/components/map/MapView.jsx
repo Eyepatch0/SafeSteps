@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import clsx from 'clsx'
 import { GoogleMap, Polyline, useJsApiLoader, Marker } from '@react-google-maps/api'
 import nightMapStyle from '../../styles/mapStyles.js'
+import policeStations from '../../data/policeStations'
 
 const MAP_CENTER = { lat: 38.9897, lng: -76.9378 }
 const ROUTE_COLORS = {
@@ -100,6 +101,26 @@ export default function MapView({
                       />
                     )
                   })}
+
+                  {/* Police station markers */}
+                  {canRenderMap && policeStations.map((station, idx) => (
+                    <Marker
+                      key={`police-${idx}`}
+                      position={{ lat: station.lat, lng: station.lng }}
+                      label={{
+                        text: '🅿️',
+                        color: '#ffffff',
+                        fontSize: '20px',
+                      }}
+                      title={station.name}
+                      zIndex={5}
+                      icon={{
+                        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><rect width="1" height="1" fill="transparent"/></svg>'),
+                        scaledSize: { width: 1, height: 1 },
+                        anchor: { x: 0, y: 0 }
+                      }}
+                    />
+                  ))}
 
                   {/* Start/End markers for the focused route */}
                   {highlightedRoute?.path?.length > 0 ? (

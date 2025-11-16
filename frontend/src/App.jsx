@@ -56,6 +56,7 @@ function App() {
           `Exploring safer options from ${query.start} to ${query.destination}. We prioritize lighting, activity, and recent community safety signals.`,
         )
       } catch (err) {
+        console.error(err)
         setRouteSummary('Unable to fetch live routes — showing demo data.')
       }
     })()
