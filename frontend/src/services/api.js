@@ -24,4 +24,17 @@ export async function planSafeRoutes({ origin, destination, mode = "WALK" }) {
     return data
 }
 
-export default { planSafeRoutes }
+export async function fetchPlaceSuggestions(query) {
+    if (!query || query.length < 2) return []
+    const url = `${BASE}/places/autocomplete?query=${encodeURIComponent(query)}`
+    try {
+        const res = await fetch(url)
+        if (!res.ok) return []
+        const data = await res.json()
+        return data.suggestions ?? []
+    } catch (err) {
+        return []
+    }
+}
+
+export default { planSafeRoutes, fetchPlaceSuggestions }

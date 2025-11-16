@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.risk_engine_route import router as risk_router
 from app.api.health import router as health_router
+from app.api.autocomplete import router as autocomplete_router
 
 
 app = FastAPI(title="SafeSteps API")
@@ -22,4 +23,5 @@ app.add_middleware(
 # include the two routers
 app.include_router(health_router, prefix="/api")
 app.include_router(risk_router, prefix="/api")
+app.include_router(autocomplete_router, prefix="/api")
 
